@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Author</title>
+    <div th:replace="/fragments/navbar :: links"></div>
+</head>
+<body>
+<div th:replace="/fragments/navbar :: navbar"></div>
+<div class="modal fade" id="add_modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add - Item</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="item_form">
+                    <input type="hidden" name="id" id="id">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input id="name" class="form-control form-control-sm" name="name" type="text" placeholder="Name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" class="form-control form-control-sm" name="description" placeholder="Description"></textarea>
+                    </div>
+
+                    <div class="form-group float-right">
+                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-window-close mr-1"></i>Close</button>
+                        <button type="submit" class="btn btn-sm btn-success"><i class="fas fa-save mr-1"></i>Save</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<section class="container-fluid">
+    <div class="row mt-2">
+        <div class="col">
+            <button id="add" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Add</button>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+            <table class="table" id="items">
+                <thead>
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="author, key : ${authors}">
+                        <td th:text="${key.index + 1}"></td>
+                        <td th:text="${author.getName()}"></td>
+                        <td th:text="${author.getDescription()}"></td>
+                        <td>
+                            <i style="cursor: pointer" id="edit" th:attr="data-id=${author.getId()}" class="fas fa-edit mr-1 text-warning"></i>
+                            <i style="cursor: pointer" id="delete" th:attr="data-id=${author.getId()}" class="fas fa-trash text-danger"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</body>
+<script type="application/javascript">
+    $(document).ready(function () {
+        $('#items').dataTable( {
+            "ordering": false
+        } );
+    })
+    $(document).on('click', '#add', function () {
+        $('#item_form').trigger('reset');
+        $('#id').val('');
+        $('#add_modal').modal('show');
+    })
+    $(document).on('submit', '#item_form', function () {
+        let formData = new FormData(this);
+        let token = $("meta[name='_csrf']").attr("content");
+        $.ajax({
+            method: 'post',
+            data: formData,
+            url: '/admin/author/save',
+            headers: {"X-CSRF-TOKEN": token},
+            contentType: false,
+            processData: false,
+            cache: false,
+            success: function (result) {
+                location.reload();
+            },
+            error: function (xhr) {
+                console.log(xhr)
+            }
+        })
+        return false;
+    })
+
+    $(document).on('click', '#delete', function () {
+        let id = $(this).data('id');
+        $.ajax({
+            method: 'get',
+            url: '/admin/author/delete/' + id,
+            success: function (result) {
+                location.reload();
+            },
+            error: function (xhr) {
+                console.log(xhr)
+            }
+        })
+    })
+
+    $(document).on('click', '#edit', function () {
+        let id = $(this).data('id');
+        $.ajax({
+            method: 'get',
+            url: '/admin/author/get/' + id,
+            success: function (result) {
+                console.log(result);
+                $('#id').val(result.id);
+                $('#name').val(result.name);
+                $('#description').val(result.description);
+                $('#add_modal').modal('show');
+            },
+            error: function (xhr) {
+                console.log(xhr)
+            }
+        })
+    })
+</script>
+</html>

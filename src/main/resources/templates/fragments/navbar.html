@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Library</title>
+    <div th:fragment="links">
+        <meta th:name="_csrf" th:content="${_csrf.token}"/>
+        <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+        <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.4.1/css/bootstrap.min.css}"/>
+        <link rel="stylesheet" th:href="@{/datatable/dataTables.bootstrap4.min.css}"/>
+        <link rel="stylesheet" th:href="@{/fontawesome-free/css/all.css}">
+        <script th:src="@{/webjars/jquery/3.3.1/dist/jquery.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/4.4.1/js/bootstrap.min.js}"></script>
+        <script th:src="@{/datatable/jquery.dataTables.min.js}"></script>
+        <script th:src="@{/datatable/dataTables.bootstrap4.min.js}"></script>
+        <style>
+            .table td, .table th {
+                padding: .40rem;
+                vertical-align: top;
+                border-top: 1px solid #dee2e6;
+            }
+        </style>
+    </div>
+</head>
+<body>
+<div th:fragment="navbar">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" th:href="@{/admin/author}">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-menu"
+                aria-controls="nav-menu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="nav-menu">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/admin/author}">Author</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/admin/book}">Book</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+</body>
+</html>
