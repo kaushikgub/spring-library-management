@@ -1,13 +1,11 @@
 package com.kaushik.librarymanagement.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 public class Author {
@@ -23,19 +21,16 @@ public class Author {
     private Date createdAt;
     @NotNull
     private Date updatedAt;
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Book> books;
 
-    public Author(Long id, @NotBlank @Size(max = 255) String name, String description, Date createdAt, Date updatedAt, List<Book> books) {
+    public Author() {
+    }
+
+    public Author(Long id, @NotBlank @Size(max = 255) String name, String description, Date createdAt, Date updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.books = books;
-    }
-
-    public Author() {
     }
 
     public Long getId() {
@@ -76,13 +71,5 @@ public class Author {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<Book> books) {
-        this.books = books;
     }
 }

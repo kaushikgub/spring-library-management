@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User</title>
+    <div th:replace="/fragments/user :: links"></div>
+</head>
+<body>
+<div th:replace="/fragments/user :: navbar"></div>
+<section class="container-fluid">
+    <div class="row mt-2">
+        <div class="col">
+            <button id="add" class="btn btn-sm btn-primary"><i class="fas fa-plus"></i> Add</button>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+            <table class="table" id="items">
+                <thead>
+                <tr>
+                    <th>Sl.No</th>
+                    <th>Book</th>
+                    <th>Due Date</th>
+                    <th>Fine</th>
+                    <th>Narrative</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item, key : ${items}">
+                    <td th:text="${key.index + 1}"></td>
+                    <td th:text="${item.book.getName()}"></td>
+                    <td th:text="${item.getDueDate()}"></td>
+                    <td th:text="${item.getFine()}"></td>
+                    <td th:text="${item.getNarrative()}"></td>
+                    <td>
+                        <i style="cursor: pointer" id="edit" th:attr="data-id=${item.getId()}" class="fas fa-edit mr-1 text-warning"></i>
+                        <i style="cursor: pointer" id="delete" th:attr="data-id=${item.getId()}" class="fas fa-trash text-danger"></i>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+</body>
+</html>

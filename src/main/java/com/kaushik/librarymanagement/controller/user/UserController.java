@@ -1,36 +1,41 @@
 package com.kaushik.librarymanagement.controller.user;
 
+import com.kaushik.librarymanagement.entity.BorrowItem;
 import com.kaushik.librarymanagement.entity.User;
-import com.kaushik.librarymanagement.service.user.UserService;
+import com.kaushik.librarymanagement.repository.UserRepository;
+import com.kaushik.librarymanagement.service.user.BorrowItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.validation.Valid;
-import java.util.Date;
+import java.security.Principal;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
     @Autowired
-    private UserService userService;
+    private BorrowItemService borrowItemService;
 
-    @GetMapping("/registration")
-    public String registration(){
-        return "user/registration";
+    @Autowired
+    private UserRepository userRepository;
+
+    @GetMapping
+    public String index(Model model, Principal principal){
+        Optional<User> user = userRepository.findByUserName(principal.getName());
+        user.orElseThrow(()-> new UsernameNotFoundException("Not Found"));
+        model.addAttribute("items", borrowItemService.getUserItem(user.get()));
+        return "user/index";
     }
 
-    @PostMapping("/registration")
+    @GetMapping("/test")
     @ResponseBody
-    public String registration(@Valid User user){
-        user.setRoles("USER");
-        user.setType("user");
-        user.setCreatedAt(new Date());
-        user.setActive(true);
-        userService.saveOrUpdate(user);
-        return "Saved Successfully";
+    public User users(Principal principal){
+        Optional<User> user = userRepository.findByUserName(principal.getName());
+        return user.get();
     }
 }
